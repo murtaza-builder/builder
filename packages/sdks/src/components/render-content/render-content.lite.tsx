@@ -78,6 +78,7 @@ export default function RenderContent(props: RenderContentProps) {
   const elementRef = useRef<HTMLDivElement>();
   const state = useStore({
     forceReRenderCount: 0,
+    overrideContent: null as Nullable<BuilderContent>,
     get useContent(): Nullable<BuilderContent> {
       if (!props.content && !state.overrideContent) {
         return undefined;
@@ -90,10 +91,13 @@ export default function RenderContent(props: RenderContentProps) {
           ...props.data,
           ...state.overrideContent?.data,
         },
+        meta: {
+          ...(props.content?.meta || {}),
+          ...(state.overrideContent?.meta || {}),
+        },
       };
       return mergedContent;
     },
-    overrideContent: null as Nullable<BuilderContent>,
     update: 0,
     get canTrackToUse(): boolean {
       return props.canTrack || true;
